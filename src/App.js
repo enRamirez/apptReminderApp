@@ -10,62 +10,80 @@ import axios from 'axios';
 function AppointmentForm() {
   const [appointment, setAppointment] = useState({
     name: '',
-    describtion: '',
-    date: new Date(),
+    description: '',
+    date: '',
     reminderTime: ''
   });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setAppointment({ ...appointment, [name]: date });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAppointment(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleDateChange = (date) => {
-    setAppointment({ ...appointment, date: date });
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     // this is where the data is sent to the backend to process the reminder
     console.log(appointment);
     // Example POST request (adjust URL and data structure as needed)
     // axios.post('YOUR_BACKEND_ENDPOINT', appointment)
     //      .then(response => console.log(response.data))
     //      .catch(error => console.error('There was an error!', error));
+    alert('Appointment saved!');
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Name of Appointment</label>
-        <input
-          type='text'
-          name='name'
-          value={appointment.name}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Date and Time:</label>
-        <DatePicker
-          selected={appointment.date}
-          onChange={handleDateChange}
-          showTimeSelect
-          dateFormat='Pp'
-        />
-      </div>
-      <div>
-        <label>Reminder Time (hours before):</label>
-        <input
-          type='number'
-          name='reminderTime'
-          value={appointment.reminderTime}
-          onChange={handleInputChange}
-        />
-      </div>
-      <button type='sumbit'>Sumbit</button>
-    </form>
-  )
+    <div className="App">
+      <h1>Appointment Reminder App</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>
+            Appointment Name:
+            <input
+              type="text"
+              name="name"
+              value={appointment.name}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Date:
+            <input
+              type="date"
+              name="date"
+              value={appointment.date}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Time:
+            <input
+              type="time"
+              name="time"
+              value={appointment.time}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Reminder Time (hours before):
+            <input
+              type="number"
+              name="reminderTime"
+              value={appointment.reminderTime}
+              onChange={handleChange}
+              min="1"
+            />
+          </label>
+        </div>
+        <button type="submit">Save Appointment</button>
+      </form>
+    </div>
+  );
 }
 
 export default AppointmentForm;
