@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.module.css'
 import axios from 'axios';
-// import './App.css';
+import './App.css';
 // import { BrowserRouter as Route, Router, Routes } from 'react-router-dom';
 // import Login from './components/login';
 // import MainPage from './components/mainPage';
@@ -10,32 +10,40 @@ import axios from 'axios';
 function AppointmentForm() {
   const [appointment, setAppointment] = useState({
     name: '',
-    description: '',
     date: '',
+    time: '',
     reminderTime: ''
   });
+
+  const [appointmentsList, setAppointmentsList] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAppointment(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // this is where the data is sent to the backend to process the reminder
+
+    setAppointmentsList([...appointmentsList, appointment]);
+    
+    setAppointment({
+      name:'',
+      date:'',
+      time:'',
+      reminderTime:''
+    });
+
     console.log(appointment);
-    // Example POST request (adjust URL and data structure as needed)
-    // axios.post('YOUR_BACKEND_ENDPOINT', appointment)
-    //      .then(response => console.log(response.data))
-    //      .catch(error => console.error('There was an error!', error));
     alert('Appointment saved!');
-  }
+    
+  };
 
   return (
     <div className="App">
-      <h1>Appointment Reminder App</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <h1 className='appHeader'>Appointment Reminder App</h1>
+      <form onSubmit={handleSubmit} className='formsSection'>
+        <div className='formsInputs'>
           <label>
             Appointment Name:
             <input
@@ -82,6 +90,19 @@ function AppointmentForm() {
         </div>
         <button type="submit">Save Appointment</button>
       </form>
+      <div className='listAppointment'>
+        <h2 className='listHeader'>Appointments List</h2>
+        <ul>
+          {appointmentsList.map((appointment, index) => (
+            <li key={index}>
+              {`Name: ${appointment.name}`} <br />
+              {`Date: ${appointment.date}`} <br />
+              {`Time: ${appointment.time}`} <br />
+              {`Reminder: ${appointment.reminderTime} hours before`}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
