@@ -12,7 +12,8 @@ function AppointmentForm() {
     name: '',
     date: '',
     time: '',
-    reminderTime: ''
+    reminderTime: '',
+    phoneNumber: '',
   });
 
   const [appointmentsList, setAppointmentsList] = useState([]);
@@ -25,18 +26,36 @@ function AppointmentForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    sendSMSReminder(appointment);
+
     setAppointmentsList([...appointmentsList, appointment]);
     
     setAppointment({
       name:'',
       date:'',
       time:'',
-      reminderTime:''
+      reminderTime:'',
+      phoneNumber:'',
     });
 
     console.log(appointment);
     alert('Appointment saved!');
     
+  };
+
+  const sendSMSReminder = (appointmentDetails) => {
+    // ask keith about this one 
+    // axios.post('http://YOUR_BACKEND_ENDPOINT/sendReminder'
+    axios.post('http://localhost:3001/sendReminder', {
+      to: appointmentDetails.phoneNumber,
+      body: `Reminder: Your appointment for ${appointmentDetails.name} is coming up on ${appointmentDetails.date} at ${appointmentDetails.time}.`,
+    })
+    .then(response => {
+      console.log(response.data.message);
+    })
+    .catch(error => {
+      console.error('Error sending SMS:', error.message);
+    });
   };
 
   return (
@@ -85,6 +104,15 @@ function AppointmentForm() {
               value={appointment.reminderTime}
               onChange={handleChange}
               min="1"
+            />
+          </label>
+          <label>
+            Phone Number:
+            <input
+              type="text"
+              name="phoneNumber"
+              value={appointment.phoneNumber}
+              onChange={handleChange}
             />
           </label>
         </div>
