@@ -106,6 +106,8 @@ function AppointmentForm() {
               min="1"
             />
           </label>
+        </div>
+        <div>
           <label>
             Phone Number:
             <input
